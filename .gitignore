@@ -3,9 +3,9 @@ node_modules/
 .pnp
 .pnp.js
 
-# Production
-dist/
-build/
+# Build folders des sources (on garde public/)
+Brunch Website Camille/build/
+Brunch Website Camille (1)/build/
 
 # Misc
 .DS_Store

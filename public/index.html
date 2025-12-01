@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sélection de Propositions - Camille's Brunch</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #FAF9F7;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Background circles décoratifs */
+        .bg-decoration {
+            position: fixed;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-decoration.circle-1 {
+            background: linear-gradient(135deg, #D4A5A5 0%, #E8C4C4 100%);
+            top: -200px;
+            right: -200px;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .bg-decoration.circle-2 {
+            background: linear-gradient(135deg, #E8C4C4 0%, #F5E5E5 100%);
+            bottom: -300px;
+            left: -300px;
+            animation: float 25s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            50% {
+                transform: translate(50px, 50px) scale(1.05);
+            }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header with Tekna branding */
+        .header {
+            text-align: center;
+            margin-bottom: 80px;
+            animation: fadeInDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .header .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .header .logo-container img {
+            height: 80px;
+            width: auto;
+            filter: drop-shadow(0 4px 12px rgba(212, 165, 165, 0.3));
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: #1A1A1A;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .header h1 strong {
+            font-weight: 700;
+            background: linear-gradient(135deg, #D4A5A5 0%, #B87D7D 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1.125rem;
+            color: #666;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Cards grid */
+        .proposals {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 48px;
+            margin-bottom: 60px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 20px 60px rgba(212, 165, 165, 0.08);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: fadeInUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(212, 165, 165, 0.1);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #D4A5A5 0%, #E8C4C4 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06), 0 32px 80px rgba(212, 165, 165, 0.15);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .card-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #D4A5A5 0%, #E8C4C4 100%);
+            color: white;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .card-number {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .card h2 {
+            font-size: 2rem;
+            color: #1A1A1A;
+            margin-bottom: 16px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .card p {
+            color: #666;
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 32px;
+            font-weight: 400;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            margin-bottom: 24px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .status.live {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .status.offline {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(0.9);
+            }
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #D4A5A5 0%, #B87D7D 100%);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 16px rgba(212, 165, 165, 0.3);
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.01em;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(212, 165, 165, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover .btn-arrow {
+            transform: translateX(4px);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            animation: fadeIn 1s ease-out 0.5s both;
+        }
+
+        .footer-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 700px;
+            margin: 0 auto;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(212, 165, 165, 0.1);
+        }
+
+        .footer-card p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .footer-card .signature {
+            color: #D4A5A5;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .proposals {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .card {
+                padding: 32px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            .card h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background decoration -->
+    <div class="bg-decoration circle-1"></div>
+    <div class="bg-decoration circle-2"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-container">
+                <img src="tekna-logo.png" alt="tekNa studio" style="height: 100px; width: auto;">
+            </div>
+            <h1>Propositions pour <strong>Camille's</strong></h1>
+            <p>Découvrez les deux créations web que nous avons imaginées pour votre établissement</p>
+        </div>
+
+        <!-- Proposals Grid -->
+        <div class="proposals">
+            <div class="card">
+                <div class="card-badge">
+                    <span class="card-number">01</span>
+                    Proposition
+                </div>
+                <h2>Design Classique</h2>
+                <p>
+                    Une approche élégante et intemporelle, avec une mise en avant claire de votre carte
+                    et une navigation intuitive. Idéal pour une première présence digitale professionnelle.
+                </p>
+                <span class="status live">
+                    <span class="status-dot"></span>
+                    En ligne
+                </span>
+                <br><br>
+                <a href="/proposition-1/" target="_blank" class="btn" id="btn1">
+                    Découvrir le site
+                    <svg class="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4.167 10h11.666M10 4.167L15.833 10 10 15.833" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="card-badge">
+                    <span class="card-number">02</span>
+                    Proposition
+                </div>
+                <h2>Design Premium</h2>
+                <p>
+                    Une expérience immersive avec des animations fluides et une direction artistique moderne.
+                    Pour une présence digitale qui se démarque et capte l'attention de vos visiteurs.
+                </p>
+                <span class="status live">
+                    <span class="status-dot"></span>
+                    En ligne
+                </span>
+                <br><br>
+                <a href="/proposition-2/" target="_blank" class="btn" id="btn2">
+                    Découvrir le site
+                    <svg class="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4.167 10h11.666M10 4.167L15.833 10 10 15.833" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-card">
+                <p>
+                    💡 Les deux sites s'ouvrent dans de nouveaux onglets pour faciliter la comparaison.
+                    Prenez le temps d'explorer chaque proposition et n'hésitez pas à nous faire part de vos retours.
+                </p>
+                <p class="signature">Avec passion, tekNa studio</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Les sites sont déjà intégrés, pas besoin de vérification
+    </script>
+</body>
+
+</html>
